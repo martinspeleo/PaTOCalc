@@ -46,9 +46,9 @@ class FormGenerator(models.Model):
             def __init__(s, *args, **kwargs):
                 super(DynamicForm, s).__init__(*args, **kwargs)
                 for item in self.get_data():
-                    if item["type"] == "Num":
+                    if item["type"] == "num":
                         s.fields[item["name"]] = FloatField(label=item["label"])
-                    elif item["type"] == "Text":
+                    elif item["type"] == "text":
                         s.fields[item["name"]] = CharField(label=item["label"], max_length=255)
         return DynamicForm
 
