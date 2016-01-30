@@ -1,0 +1,10 @@
+{% if request.session.current_patient %}
+
+<div class="panel panel-info patient-details">
+  <div class="panel-heading">Patient Details</div>
+  <div class="panel-body">
+    Patient: {{request.session.current_patient.id}}
+  </div>
+</div>
+
+{% endif %}

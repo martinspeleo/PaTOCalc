@@ -1,8 +1,18 @@
 {% extends "base.html" %}
 
+{% load staticfiles %}
+
+{% block bootstrap3_extra_head %}
+	<link type="text/css" rel="stylesheet" href="{% static 'css/main.css' %}" />
+	<link type="text/css" rel="stylesheet" href="{% static 'css/codemirror.css' %}" />
+	<link type="text/css" rel="stylesheet" href="{% static 'css/default.css' %}" />
+	<link type="text/css" rel="stylesheet" href="{% static 'css/docs.css' %}" />
+   <script src="{% static 'js/codemirror.js' %}"></script>
+   <script src="{% static 'js/python.js' %}"></script>
+   <style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>
+{% endblock %}
 
 {% block main_container %}
-
 <form action="{% url 'submit_new_form' %}" class="form-horizontal" method="post">
 	{% csrf_token %}
     <fieldset>
@@ -18,7 +28,7 @@
                     </div>
                 </div>
             {% else %}
-                <div class="control-group">
+                <div class="control-group {{ field.name }}">
                     <label class="control-label">{{ field.label }}</label> 
                     <div class="controls">{{ field }}
                         {% if field.help_text %}
@@ -29,10 +39,128 @@
             {% endif %}
         {% endfor %}
     </fieldset>
+    <p>
+        <strong> Form Fields </strong><br>
+        Build up the inputs and outputs for the calculator
+    </p>
+    <div id="new_field">
+        <label>Field Name:</label>
+        <input id="field_name" type="text" name="field_name">
+        <label>Field Label:</label>
+        <input id="field_label" type="text" name="field_name">
+        <br>
+        <label>Type:</label>
+        <br>
+        <input type="radio" name="field_type" value="num" id="type_num"><label for="type_num">Number</label>
+        <input type="radio" name="field_type" value="select" id="type_select"><label for="type_select">Select</label>
+        <input type="radio" name="field_type" value="multiselect" id="type_multiselect"><label for="type_multiselect">Multiple Select</label>
+        <input type="radio" name="field_type" value="text" id="type_text"><label for="type_text">Free Text</label>
+        <input type="radio" name="field_type" value="desc" id="type_desc"><label for="type_desc">Description/Form Comment</label>
+        <input type="radio" name="field_type" value="output" id="type_output"><label for="type_output">Output</label>
+        <br>
+        <ol style="display:none" id="select_values">
+            <li id="select_value">
+                <label>Select label:</label>
+                <input type="text" name="select_name">
+                <label>Value:</label>
+                <input type="text" name="select_value">
+            </li>
+            <a id="addvalue" href="javascript:void(0)">+ Add Value</a>
+        </ol>
+       <input type="submit" value="Add Field" id="add">
+       <br><br>
+    </div>
+    <div id="output">
+        
+    </div>
+    <script>
+    var fields = [];
+    function render_field(field, all){
+        $('#output').text(JSON.stringify(all));
+    }
+    function hasWhiteSpace(s){
+        return /\s/g.test(s);
+    }
+    document.addEventListener("DOMContentLoaded", function(event) {
+        $('#addvalue').click(function(event){
+            obj = $('#select_value').clone().insertBefore(this)
+            obj.find("input").val('')
+            obj.removeAttr('id')
+            return false
+        });
+        $('#type_select, #type_multiselect').click(function(event){
+            $('#select_values').show();
+        });
+        $('#add').click(function(event){
+            event.preventDefault();
+            field = {
+                "name":'',
+                "label":'',
+                "type":''
+            }
+            field.name = $('#field_name').val();
+            if (hasWhiteSpace(field.name)) {
+                alert("You can't have spaces in field names");
+                return
+            }
+            field.label = $('#field_label').val();
+            field.type = $("#new_field input[type='radio']:checked").val();
+            if (field.type == 'select' || field.type == 'multiselect'){
+                values = []
+                $("#select_values input[name='select_name']").each(function(){
+                    value = {
+                        "label":'',
+                        "value":''
+                    }
+                    value.label = $(this).val();
+                    values.push(value)
+                });
+                i = 0;
+                $("#select_values input[name='select_value']").each(function(){
+                    values[i].value = $(this).val();
+                    i = i + 1;
+                });
+                field.values = values;
+            }
+            
+            $('#field_name').val('');
+            $('#field_label').val('');
+            $('#select_values li:not(:first-child)').remove();
+            $('#select_values li input').val('');
+            $('#select_values').hide();
+            $("#new_field input[type='radio']").prop('checked', false);
+            fields.push(field);
+            render_field(field, fields);
+        });
+        $('div.control-group.html').hide();
+        reset_val = $('#id_html').val();
+        if (reset_val != ""){
+            fields = JSON.parse(reset_val);
+        }
+        $('#output').append(JSON.stringify(fields));
+        $('.form-actions button').click(function(event){
+            $('#id_html').text(JSON.stringify(fields));
+        });
+    });
+    </script>
     <div class="form-actions">
         <button type="submit" class="btn btn-primary" >Submit</button>
     </div>
 </form>
+
+
+    <script>
+      var editor = CodeMirror.fromTextArea(document.getElementById("id_code"), {
+        mode: {name: "python",
+               version: 2,
+               singleLineStringErrors: false},
+        lineNumbers: true,
+        indentUnit: 4,
+        tabMode: "shift",
+        matchBrackets: true
+      });
+    </script>
+
 
 
 {% endblock %}
