@@ -34,4 +34,8 @@ class FormGenerator(models.Model):
     developer = models.ForeignKey(User, blank=True, null=True, related_name='forms_for_dev')
     tester = models.ForeignKey(User, blank=True, null=True, related_name='forms_for_testing')
 
+class FormInstance(models.Model):
+    author = models.ForeignKey(User)
+    content = models.TextField()
+    created_date = models.DateTimeField()
 
