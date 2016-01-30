@@ -16,4 +16,12 @@ Configure virtualenv by following instructions in /etc/bash_completion.d/virtual
 Create a virtual environment:
     mkvirtualenv -r requirements PaTOCalc
 
+Make database migrations:
+    python manage.py makemigrations
+    
+Apply database migrations:
+    python manage.py migrate
+
+Run the Django webserver:
+    python manage.py runserver
 
