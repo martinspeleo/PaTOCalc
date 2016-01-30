@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block main_container %}
-<form action="{% url 'submit_new_form' %}" class="form-horizontal" method="post">
+<form action="{% url 'calc:submit_new_form' %}" class="form-horizontal" method="post">
 	{% csrf_token %}
     <fieldset>
         <legend>{{ title }}</legend>

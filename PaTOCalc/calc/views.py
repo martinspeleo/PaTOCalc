@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.base import TemplateView
 from django.template import RequestContext
 from django.shortcuts import get_object_or_404
+from django.views.generic.list import ListView
 
 from calc.forms import AddFormGenerator
 from calc.models import FormGenerator, FormInstance
@@ -36,6 +37,7 @@ def submit_new_form(request):
 def new_form_instance(request, fg_pk, mrn):
     fg = get_object_or_404(FormGenerator, pk = fg_pk)
     #patient = get_patient ...
+
     form = fg.get_form()(request.POST)
     if request.method == 'POST' and form.is_valid():
         fi = FormInstance(author = request.user,
@@ -47,3 +49,6 @@ def new_form_instance(request, fg_pk, mrn):
     ctx = {'user' : request.user, 'form': form}
     return render(request,'calc/form_instance.html', ctx)
 
+class CalculatorListView(ListView):
+
+    model = FormGenerator

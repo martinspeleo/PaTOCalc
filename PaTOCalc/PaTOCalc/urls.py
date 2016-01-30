@@ -20,7 +20,7 @@ from django.views.generic.base import TemplateView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^calc/', include('calc.urls')),
+    url(r'^calc/', include('calc.urls', namespace="calc")),
     url(r'^pdfviewer/', include('pdfviewer.urls')),
     url(r'^patient/', include('patient.urls', namespace="patient") ),
     #url(r'^$', home_page, name ="home_page"),

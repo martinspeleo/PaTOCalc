@@ -16,7 +16,7 @@ class PatientSearchView(FormView):
     form_class = PatientSearchForm
 
     def get_success_url(self):
-        return reverse('home')
+        return reverse('calc:choose-generator')
 
     def form_valid(self, form):
         # this should not work like this, because we should actually search first
