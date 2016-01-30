@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import User
-
+import json
 
 
 class FormGenerator(models.Model):
@@ -38,4 +38,8 @@ class FormInstance(models.Model):
     author = models.ForeignKey(User)
     content = models.TextField()
     created_date = models.DateTimeField()
+    form_generator = models.ForeignKey('FormGenerator')
+    
+    def get_data(self):
+        return json.loads(self.content)
 

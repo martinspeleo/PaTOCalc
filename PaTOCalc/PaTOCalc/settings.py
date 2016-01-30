@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'bootstrap3',
     'calc',
     'patient',
+    'pdfviewer'
 ]
 
 MIDDLEWARE_CLASSES = [
