@@ -1,0 +1,5 @@
+{% if request.session.current_patient %}
+<div class="">
+    Patient: {{request.session.current_patient.id}}
+</div>
+{% endif %}
