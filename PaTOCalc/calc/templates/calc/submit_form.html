@@ -18,7 +18,7 @@
                     </div>
                 </div>
             {% else %}
-                <div class="control-group">
+                <div class="control-group {{ field.name }}">
                     <label class="control-label">{{ field.label }}</label> 
                     <div class="controls">{{ field }}
                         {% if field.help_text %}
@@ -29,6 +29,99 @@
             {% endif %}
         {% endfor %}
     </fieldset>
+
+        <label>Name:</label>
+        <input id="field_name" type="text" name="field_name">
+        <label>Label:</label>
+        <input id="field_label" type="text" name="field_name">
+        <br>
+        <label>Type:</label>
+        <br>
+        <input type="radio" name="field_type" value="num" id="type_num"><label for="type_num">Number</label><br>
+        <input type="radio" name="field_type" value="select" id="type_select"><label for="type_select">Select</label><br>
+        <input type="radio" name="field_type" value="multiselect" id="type_multiselect"><label for="type_multiselect">Multiple Select</label><br>
+        <input type="radio" name="field_type" value="text" id="type_text"><label for="type_text">Free Text</label><br>
+        <input type="radio" name="field_type" value="desc" id="type_desc"><label for="type_desc">Description/Form Comment</label><br>
+        <input type="radio" name="field_type" value="output" id="type_output"><label for="type_output">Output</label><br>
+        <ol style="display:none" id="select_values">
+            <li id="select_value">
+                <label>Name:</label>
+                <input type="text" name="select_name">
+                <label>Value:</label>
+                <input type="text" name="select_value">
+            </li>
+            <a id="addvalue" href="javascript:void(0)">+ Add Value</a>
+        </ol>
+       <input type="submit" value="Add Field" id="add">
+    <div id="output">
+        
+    </div>
+    <script>
+    var fields = [];
+    function render_field(field){
+        
+        $('#output').append(JSON.stringify(field));
+    }
+    function hasWhiteSpace(s){
+        return /\s/g.test(s);
+    }
+    document.addEventListener("DOMContentLoaded", function(event) {
+        $('#addvalue').click(function(event){
+            obj = $('#select_value').clone().insertBefore(this)
+            obj.find("input").val('')
+            obj.removeAttr('id')
+            return false
+        });
+        $('#type_select, #type_multiselect').click(function(event){
+            $('#select_values').show();
+        });
+        $('#add').click(function(event){
+            event.preventDefault();
+            field = {
+                "name":'',
+                "label":'',
+                "type":''
+            }
+            field.name = $('#field_name').val();
+            if (hasWhiteSpace(field.name)) {
+                alert("You can't have spaces in field names");
+                return
+            }
+            field.label = $('#field_label').val();
+            field.type = $("#new_field input[type='radio']:checked").val();
+            if (field.type == 'select' || field.type == 'multiselect'){
+                values = []
+                $("#select_values input[name='select_name']").each(function(){
+                    value = {
+                        "label":'',
+                        "value":''
+                    }
+                    value.label = $(this).val();
+                    values.push(value)
+                });
+                i = 0;
+                $("#select_values input[name='select_value']").each(function(){
+                    values[i].value = $(this).val();
+                    i = i + 1;
+                });
+                field.values = values;
+            }
+            
+            $('#field_name').val('');
+            $('#field_label').val('');
+            $('#select_values li:not(:first-child)').remove();
+            $('#select_values li input').val('');
+            $('#select_values').hide();
+            $("#new_field input[type='radio']").prop('checked', false);
+            fields.push(field);
+            render_field(field);
+        });
+        $('div.control-group.html').hide();
+        $('.form-actions button').click(function(event){
+            $('#id_html').val(JSON.stringify(fields));
+        });
+    });
+    </script>
     <div class="form-actions">
         <button type="submit" class="btn btn-primary" >Submit</button>
     </div>
