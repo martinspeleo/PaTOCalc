@@ -9,5 +9,8 @@ urlpatterns = [
     url(r'^submit_new_form/', submit_new_form, name ="submit_new_form"),
     url(r'^new_form_instance/([^/]*)/([^/]*)', new_form_instance, name ="new_form_instance"),
     
+    # Patients' Authorized Forms
+    #url(r'^patient_demographic/(?P<mrn>\.+)', patient_demographic, name ="patient_demographic"),
 
+    
 ]
