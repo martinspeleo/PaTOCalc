@@ -39,23 +39,27 @@
             {% endif %}
         {% endfor %}
     </fieldset>
-
-        <label>Name:</label>
+    <p>
+        <strong> Form Fields </strong><br>
+        Build up the inputs and outputs for the calculator
+    </p>
+        <label>Field Name:</label>
         <input id="field_name" type="text" name="field_name">
-        <label>Label:</label>
+        <label>Field Label:</label>
         <input id="field_label" type="text" name="field_name">
         <br>
         <label>Type:</label>
         <br>
-        <input type="radio" name="field_type" value="num" id="type_num"><label for="type_num">Number</label><br>
-        <input type="radio" name="field_type" value="select" id="type_select"><label for="type_select">Select</label><br>
-        <input type="radio" name="field_type" value="multiselect" id="type_multiselect"><label for="type_multiselect">Multiple Select</label><br>
-        <input type="radio" name="field_type" value="text" id="type_text"><label for="type_text">Free Text</label><br>
-        <input type="radio" name="field_type" value="desc" id="type_desc"><label for="type_desc">Description/Form Comment</label><br>
-        <input type="radio" name="field_type" value="output" id="type_output"><label for="type_output">Output</label><br>
+        <input type="radio" name="field_type" value="num" id="type_num"><label for="type_num">Number</label>
+        <input type="radio" name="field_type" value="select" id="type_select"><label for="type_select">Select</label>
+        <input type="radio" name="field_type" value="multiselect" id="type_multiselect"><label for="type_multiselect">Multiple Select</label>
+        <input type="radio" name="field_type" value="text" id="type_text"><label for="type_text">Free Text</label>
+        <input type="radio" name="field_type" value="desc" id="type_desc"><label for="type_desc">Description/Form Comment</label>
+        <input type="radio" name="field_type" value="output" id="type_output"><label for="type_output">Output</label>
+        <br>
         <ol style="display:none" id="select_values">
             <li id="select_value">
-                <label>Name:</label>
+                <label>Select label:</label>
                 <input type="text" name="select_name">
                 <label>Value:</label>
                 <input type="text" name="select_value">
@@ -63,14 +67,14 @@
             <a id="addvalue" href="javascript:void(0)">+ Add Value</a>
         </ol>
        <input type="submit" value="Add Field" id="add">
+       <br><br>
     <div id="output">
         
     </div>
     <script>
     var fields = [];
-    function render_field(field){
-        
-        $('#output').append(JSON.stringify(field));
+    function render_field(field, all){
+        $('#output').text(JSON.stringify(all));
     }
     function hasWhiteSpace(s){
         return /\s/g.test(s);
@@ -124,11 +128,16 @@
             $('#select_values').hide();
             $("#new_field input[type='radio']").prop('checked', false);
             fields.push(field);
-            render_field(field);
+            render_field(field, fields);
         });
         $('div.control-group.html').hide();
+        reset_val = $('#id_html').val();
+        if (reset_val != ""){
+            fields = JSON.parse(reset_val);
+        }
+        $('#output').append(JSON.stringify(fields));
         $('.form-actions button').click(function(event){
-            $('#id_html').val(JSON.stringify(fields));
+            $('#id_html').text(JSON.stringify(fields));
         });
     });
     </script>
