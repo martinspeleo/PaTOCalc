@@ -1,17 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Welcome to PaTOCalc</title>
-</head>
-<body>
-<div style="position:absolute; right: 0px;" ><a href="{% url 'admin_home_page' %}">Admin Panel</a></div>
+{% extends "base.html" %}
 
-<h1>Let's Calculate</h1>
-
-Enter  # :  <br>
--- TO DO : PUT HERE THE PATIENT # FORM --
+{% block bootstrap3_title %}Welcome to PaTOCalc{% endblock %}
 
 
-</body>
-</html>
+{% block main_container %}
+<div>
+<h1>PaTOCalc!</h1>
+Welcome to PaTOCalc. Let's find a patient, and do some calculation.
+</div>
+{% endblock %}
