@@ -24,4 +24,7 @@ Apply database migrations:
 
 Run the Django webserver:
     python manage.py runserver
+    
+Make superuser:
+    python manage.py createsuperuser
 
