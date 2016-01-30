@@ -16,5 +16,15 @@ def admin_home_page(request):
 
 @login_required
 def submit_new_form(request):
-    ctx = {'user' : request.user, 'form' : AddFormGenerator }
-    return render_to_response('calc/submit_form.html', ctx)
+    
+    form = AddFormGenerator(request.POST or None)
+    
+    if request.method == 'POST' and form.is_valid():
+        newForm = form.save(commit=False)
+        newForm.requester = request.user
+        newForm.status = '0'
+        newForm.save()
+        return HttpResponseRedirect(reverse('home')) 
+
+    ctx = {'user' : request.user, 'form' : form }
+    return render_to_response('calc/submit_form.html', ctx, context_instance=RequestContext(request))

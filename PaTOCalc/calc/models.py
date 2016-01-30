@@ -22,7 +22,7 @@ class FormGenerator(models.Model):
     risks = models.TextField(blank=True, null=True)
     
     # Dates
-    submited_date = models.DateTimeField(blank=True, null=True)
+    submited_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     under_dev_date = models.DateTimeField(blank=True, null=True)
     under_testing_date = models.DateTimeField(blank=True, null=True)
     completed_date = models.DateTimeField(blank=True, null=True)
