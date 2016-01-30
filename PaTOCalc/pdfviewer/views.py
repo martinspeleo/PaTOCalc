@@ -1,11 +1,12 @@
 #from django.shortcuts import render
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from calc.models import FormInstance
 
 def make_pdf(request, fi_pk):
     fi = get_object_or_404(FormInstance, pk = fi_pk)
-
+    form_data = fi.get_data()
     # Create the HttpResponse object with the appropriate PDF headers.
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
@@ -15,8 +16,11 @@ def make_pdf(request, fi_pk):
 
     # Draw things on the PDF. Here's where the PDF generation happens.
     # See the ReportLab documentation for the full list of functionality.
-    p.drawString(100, 100, "Hello world.")
-    p.drawString(300, 100, "Hello world.")
+    y = 100
+    for line in form_data:
+        p.drawString(100, y, unicode(line["name"]))
+        p.drawString(300, y, unicode(line["value"]))
+        y = y - 10
 
     # Close the PDF object cleanly, and we're done.
     p.showPage()
