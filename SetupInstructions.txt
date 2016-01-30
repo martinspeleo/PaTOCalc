@@ -1,0 +1,19 @@
+Quick start instructions
+========================
+
+Install required software (Ubuntu):
+    sudo apt-get install virtualenvwrapper sqlite3 git python-dev
+    
+Setup your git user details
+    git config --global user.name "Your Name"
+    git config --global user.email you@example.com
+    
+Clone the repository:
+    git clone https://github.com/martinspeleo/PaTOCalc.git
+    
+Configure virtualenv by following instructions in /etc/bash_completion.d/virtualenvwrapper
+
+Create a virtual environment:
+    mkvirtualenv -r requirements PaTOCalc
+
+
