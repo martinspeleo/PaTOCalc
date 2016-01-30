@@ -1,8 +1,18 @@
 {% extends "base.html" %}
 
+{% load staticfiles %}
+
+{% block bootstrap3_extra_head %}
+	<link type="text/css" rel="stylesheet" href="{% static 'css/main.css' %}" />
+	<link type="text/css" rel="stylesheet" href="{% static 'css/codemirror.css' %}" />
+	<link type="text/css" rel="stylesheet" href="{% static 'css/default.css' %}" />
+	<link type="text/css" rel="stylesheet" href="{% static 'css/docs.css' %}" />
+   <script src="{% static 'js/codemirror.js' %}"></script>
+   <script src="{% static 'js/python.js' %}"></script>
+   <style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>
+{% endblock %}
 
 {% block main_container %}
-
 <form action="{% url 'submit_new_form' %}" class="form-horizontal" method="post">
 	{% csrf_token %}
     <fieldset>
@@ -126,6 +136,20 @@
         <button type="submit" class="btn btn-primary" >Submit</button>
     </div>
 </form>
+
+
+    <script>
+      var editor = CodeMirror.fromTextArea(document.getElementById("id_code"), {
+        mode: {name: "python",
+               version: 2,
+               singleLineStringErrors: false},
+        lineNumbers: true,
+        indentUnit: 4,
+        tabMode: "shift",
+        matchBrackets: true
+      });
+    </script>
+
 
 
 {% endblock %}

@@ -6,4 +6,4 @@ class AddFormGenerator(ModelForm):
     
 	class Meta:
 		model = FormGenerator
-		fields = ['title', 'requirements', 'risks', 'html']
+		fields = ['title', 'requirements', 'risks', 'code', 'html']
