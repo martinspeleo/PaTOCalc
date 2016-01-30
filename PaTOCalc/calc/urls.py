@@ -4,7 +4,8 @@ from calc.views import *
 
 urlpatterns = [
     
-    # My home page
+    # Admin home page
+    url(r'^admin_home_page/', admin_home_page, name ="admin_home_page"),
     url(r'^submit_new_form/', submit_new_form, name ="submit_new_form"),
     
 

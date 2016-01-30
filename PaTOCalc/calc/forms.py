@@ -2,7 +2,7 @@ from django.forms import ModelForm
 from calc.models import FormGenerator
 
 # Create the form class.
-class FormGenerator(ModelForm):
+class AddFormGenerator(ModelForm):
     
     class Meta:
 	model = FormGenerator
