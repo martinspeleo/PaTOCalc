@@ -21,6 +21,7 @@ from django.views.generic.base import TemplateView
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^calc/', include('calc.urls')),
+    url(r'^pdfviewer/', include('pdfviewer.urls')),
     #url(r'^$', home_page, name ="home_page"),
     url(r'^$', TemplateView.as_view(template_name='index.html'), name='home'),
 

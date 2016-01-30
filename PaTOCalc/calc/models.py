@@ -38,4 +38,5 @@ class FormInstance(models.Model):
     author = models.ForeignKey(User)
     content = models.TextField()
     created_date = models.DateTimeField()
+    form_generator = models.ForeignKey('FormGenerator')
 
