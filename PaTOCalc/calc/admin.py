@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from calc.models import FormGenerator
+
+class ReneratedForms(admin.ModelAdmin):
+    pass
+
+admin.site.register(FormGenerator, ReneratedForms)

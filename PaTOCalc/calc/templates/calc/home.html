@@ -1,0 +1,28 @@
+
+{% extends "calc/base.html" %}
+
+
+{% block content %}
+<h1>Submitted Forms</h1>
+
+<table style="width:100%">
+	<tr>
+		<th>Title</th>
+		<th>Status</th>
+		<th>Submitted by</th>
+		<th>Actions</th>		
+	</tr>
+  	<tr>
+  	{% for form in forms %}
+    <td>{{ form.title }}</td>
+    <td>{{ form.get_status_display }}</td> 
+    <td>{{ form.submitted_date }}</td>
+    <td><>Use form</td> 
+    {% endfor %}
+  </tr>
+</table>
+
+
+<a href="{% url 'submit_new_form' %}" >Submit a new form </a> 
+{% endblock content %}
+
