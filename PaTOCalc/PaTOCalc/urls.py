@@ -17,8 +17,6 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic.base import TemplateView
 
-from calc.views import home_page
-
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
