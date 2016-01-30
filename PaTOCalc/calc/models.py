@@ -2,6 +2,9 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.forms.forms import Form
+from django.forms.fields import CharField, FloatField
+
 import json
 
 
@@ -33,6 +36,21 @@ class FormGenerator(models.Model):
     tesing_report = models.TextField(blank=True, null=True)
     developer = models.ForeignKey(User, blank=True, null=True, related_name='forms_for_dev')
     tester = models.ForeignKey(User, blank=True, null=True, related_name='forms_for_testing')
+
+    
+    def get_data(self):
+        return json.loads(self.html)
+    
+    def get_form(self):    
+        class DynamicForm(Form):
+            def __init__(s, *args, **kwargs):
+                super(DynamicForm, s).__init__(*args, **kwargs)
+                for item in self.get_data():
+                    if item["type"] == "Num":
+                        s.fields[item["name"]] = FloatField(label=item["label"])
+                    elif item["type"] == "Text":
+                        s.fields[item["name"]] = CharField(label=item["label"], max_length=255)
+        return DynamicForm
 
 class FormInstance(models.Model):
     author = models.ForeignKey(User)

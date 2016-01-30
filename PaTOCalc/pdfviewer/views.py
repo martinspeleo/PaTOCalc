@@ -20,9 +20,10 @@ def make_pdf(request, fi_pk):
     # Draw things on the PDF. Here's where the PDF generation happens.
     # See the ReportLab documentation for the full list of functionality.
     y = 100
-    for line in form_data:
-        p.drawString(100, y, unicode(line["name"]))
-        p.drawString(300, y, unicode(line["value"]))
+    
+    for key, value in form_data.iteritems():
+        p.drawString(100, y, unicode(key))
+        p.drawString(300, y, unicode(value))
         y = y - 10
 
     # Close the PDF object cleanly, and we're done.

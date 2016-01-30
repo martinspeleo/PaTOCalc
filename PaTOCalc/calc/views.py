@@ -1,5 +1,7 @@
 import datetime
-from django.shortcuts import render, render_to_response
+import json
+
+from django.shortcuts import render, render_to_response, redirect
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -31,8 +33,17 @@ def submit_new_form(request):
 
 
 @login_required
-def new_form_instance(request, fi_pk, mrn):
-    fi = get_object_or_404(FormInstance, pk = fi_pk)
+def new_form_instance(request, fg_pk, mrn):
+    fg = get_object_or_404(FormGenerator, pk = fg_pk)
     #patient = get_patient ...
-    ctx = {'user' : request.user, 'form': fi}
-    return render_to_response('calc/form_instance.html', ctx)
+    form = fg.get_form()(request.POST)
+    if request.method == 'POST' and form.is_valid():
+        fi = FormInstance(author = request.user,
+                          content = json.dumps(form.cleaned_data),
+                          created_date = datetime.datetime.now(),
+                          form_generator = fg)
+        fi.save()
+        return redirect('pdf_viewer', fi.pk)
+    ctx = {'user' : request.user, 'form': form}
+    return render(request,'calc/form_instance.html', ctx)
+
