@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block main_container %}
+<h1>Calculators</h1>
+<ul>
+{% for calc in object_list %}
+    <li><a href="{% url 'calc:new_form_instance' calc.pk 123 %} ">{{ calc.title}}</a></li>
+{% empty %}
+    <li>No calculators yet.</li>
+{% endfor %}
+</ul>
+{% endblock %}
