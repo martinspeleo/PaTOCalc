@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.views.generic.base import TemplateView
 
 from calc.views import home_page
 
@@ -22,6 +23,7 @@ from calc.views import home_page
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^calc/', include('calc.urls')),
-    url(r'^$', home_page, name ="home_page"),
+    #url(r'^$', home_page, name ="home_page"),
+    url(r'^$', TemplateView.as_view(template_name='index.html'), name='home'),
 
 ]
