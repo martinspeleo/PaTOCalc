@@ -2,8 +2,11 @@
 from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+
 from calc.models import FormInstance
 
+@login_required
 def make_pdf(request, fi_pk):
     fi = get_object_or_404(FormInstance, pk = fi_pk)
     form_data = fi.get_data()
