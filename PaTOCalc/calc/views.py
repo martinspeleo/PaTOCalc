@@ -55,13 +55,11 @@ def new_form_instance(request, fg_pk, mrn):
 def evaluate(request, fg_pk, mrn):
     fg = get_object_or_404(FormGenerator, pk = fg_pk)
     inputs = {}
-    print [x['name'] for x in fg.get_data() if x['type'] == 'num']
     for key in [x['name'] for x in fg.get_data() if x['type'] == 'num']:
         try:
             inputs[key] = float(request.GET[key][0])
         except:
             pass
-    print inputs
     result = fg.evaluate(inputs)
     return JsonResponse(result)
     
