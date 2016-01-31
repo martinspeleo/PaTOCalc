@@ -1,6 +1,8 @@
 import datetime
 import json
-
+import sys
+from django.views.decorators.csrf import csrf_exempt
+from random import randint
 from django.shortcuts import render, render_to_response, redirect
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
@@ -65,6 +67,49 @@ def evaluate(request, fg_pk, mrn):
     result = fg.evaluate(inputs)
     return JsonResponse(result)
     
+
+@login_required
+@csrf_exempt
+def check_my_code(request):
+    
+    #if request.method != 'POST':
+    #    return HttpResponse('<h1>Page was found</h1>')
+    
+    fields = json.loads(request.POST['fields'])
+    mycode = '# This is a code checking example \n'
+    mycode += '# Random numbers were used to run the code. \n \n'
+    mycode += '# Input fields with random numbers \n'
+
+    for field in fields:
+        if field['type'] == 'num' :
+            mycode += '{0} = {1} \n'.format(field['label'],randint(0,9))
+    
+    mycode += '\n\n# Output fields  \n'
+    for field in fields:
+        if field['type'] == 'output' :
+            mycode += '{0} = "" \n'.format(field['label'])
+
+    mycode += '\n\n# Your code \n'
+    mycode += request.POST['mycode']
+    
+    mycode += '\n\n# Output fields results  \n'
+    for field in fields:
+	if field['type'] == 'output' :
+	    mycode += 'print({0}) \n'.format(field['label'],'')
+    
+    output = 'That was the executed code : \n{0}'.format(mycode)
+    try :
+        from cStringIO import StringIO
+        old_stdout = sys.stdout
+        redirected_output = sys.stdout = StringIO()
+        exec(mycode)
+        sys.stdout = old_stdout
+	output += 'That was the results of your code : \n{0}'.format(redirected_output.getvalue())
+    except Exception as e :
+	output += 'An error was found: {0}'.format(e)
+    
+    return HttpResponse(output)
+
 
 @method_decorator(login_required, name='dispatch')
 class CalculatorListView(ListView):
