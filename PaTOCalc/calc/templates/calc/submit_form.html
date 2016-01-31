@@ -214,7 +214,7 @@
    	$('#checkMyCode').click( function () {
         $('#id_html').text(JSON.stringify(fields));
         var dataJson = {
-            fields: $('#output').text(),
+            fields: $('#id_html').text(),
             mycode: editor.getValue(),
         };
         
