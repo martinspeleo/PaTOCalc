@@ -67,7 +67,7 @@ def make_pdf(request, fi_pk):
     p.saveState()
     p.setFont('Helvetica', 10)
     y = PAGE_HEIGHT - 330
-    for key, value in form_data.iteritems():
+    for key, value in form_data.items():
         p.drawString(35, y, '{0}: {1}'.format(key, value))
         y = y - 12
     p.restoreState()
