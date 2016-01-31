@@ -79,7 +79,7 @@ def openeyes_search(search_term):
         if (len(entries) > 1):
             return {'id': 'OE - Multiple results not implemented yet for search ' + str(search_term)}
         elif (len(entries) == 1):
-            patient = OpenEyesPatient(entries[0]['content'])
+            patient = OpenEyesPatient()
             patient.setId(entries[0]['id'])
             return patient
         else:
