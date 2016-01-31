@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block bootstrap3_title %}PaTOCalc | Login{% endblock %}
+
+{% block main_container %}
+<h1>Login</h1>
+<div id="login">
+    <form name="LoginForm" action="/login/" method="post">
+    {% csrf_token %}
+    {% if next %}
+        <input type="hidden" name="next" value="{{ next }}" />
+    {% endif %}
+    <div class="form-group">
+        <label class="control-label" for="username">Username</label>
+        <div class="controls">
+            <input type="text" id="username" name="username"  placeholder="Username">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label" for="password">Password</label>
+        <div class="controls">
+            <input type="password" name="password" id="password" placeholder="Password">
+        </div>
+    </div>
+            <button class="btn btn-primary" type="submit">Login</button>
+    </form>
+</div>
+{% endblock %}

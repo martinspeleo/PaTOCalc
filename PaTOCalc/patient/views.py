@@ -2,15 +2,18 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 from .forms import PatientSearchForm
-from .functions import set_current_patient, clear_current_patient
+from .functions import set_current_patient, clear_current_patient, search_for_patient
 
 # Create your views here.
 
 class HomePageView(TemplateView):
     template_name = "index.html"
 
+@method_decorator(login_required, name='dispatch')
 class PatientSearchView(FormView):
     template_name = "search.html"
     form_class = PatientSearchForm
@@ -20,7 +23,8 @@ class PatientSearchView(FormView):
 
     def form_valid(self, form):
         # this should not work like this, because we should actually search first
-        set_current_patient(self.request, {'id': form.cleaned_data['search_term']})
+        patient = search_for_patient(form.cleaned_data['search_term'])
+        set_current_patient(self.request, patient)
 
         return super(PatientSearchView, self).form_valid(form)
 

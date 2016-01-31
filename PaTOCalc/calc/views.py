@@ -5,6 +5,8 @@ from django.shortcuts import render, render_to_response, redirect
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.contrib.admin.views.decorators import staff_member_required
 from django.views.generic.base import TemplateView
 from django.template import RequestContext
 from django.shortcuts import get_object_or_404
@@ -13,12 +15,12 @@ from django.views.generic.list import ListView
 from calc.forms import AddFormGenerator
 from calc.models import FormGenerator, FormInstance
 
-@login_required
+@staff_member_required
 def admin_home_page(request):
     ctx = {'user' : request.user, 'forms' : FormGenerator.objects.all() }
     return render_to_response('calc/home.html', ctx)
 
-@login_required
+@staff_member_required
 def submit_new_form(request):
     form = AddFormGenerator(request.POST or None)
     
@@ -64,6 +66,6 @@ def evaluate(request, fg_pk, mrn):
     return JsonResponse(result)
     
 
+@method_decorator(login_required, name='dispatch')
 class CalculatorListView(ListView):
-
     model = FormGenerator

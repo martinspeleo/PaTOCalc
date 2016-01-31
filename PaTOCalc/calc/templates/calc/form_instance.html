@@ -1,13 +1,10 @@
-{% extends "calc/base.html" %}
+{% extends "base.html" %}
 
-
-{% block content %}
-
+{% block main_container %}
 <form action="." method="post">
 {% csrf_token %}
 {{ form.as_p }}
 <input type="submit" value="OK">
 </form>
-
 <a href="{% url 'home' %}" >Home page</a>
-{% endblock content %}
+{% endblock %}

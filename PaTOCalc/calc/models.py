@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 from django.forms.forms import Form
-from django.forms.fields import CharField, FloatField
+from django.forms.fields import CharField, FloatField, ChoiceField, MultipleChoiceField
 
 import json
 from math import log, e
@@ -41,7 +41,9 @@ class FormGenerator(models.Model):
 
     
     def get_data(self):
-        return json.loads(self.html)
+        if self.html:
+            return json.loads(self.html)
+        return []
     
     def get_form(self):    
         class DynamicForm(Form):
@@ -52,6 +54,14 @@ class FormGenerator(models.Model):
                         s.fields[item["name"]] = FloatField(label=item["label"])
                     elif item["type"] == "text":
                         s.fields[item["name"]] = CharField(label=item["label"], max_length=255)
+                    elif item["type"] == "dsc":
+                        s.fields[item["name"]] = CharField(label=item["label"], max_length=255)
+                    elif item["type"] == "select":
+                        options = [(element['value'], element['label']) for element in item['values']]
+                        s.fields[item["name"]] = ChoiceField(label=item["label"], choices=options)
+                    elif item["type"] == "multiselect":
+                        options = [(element['value'], element['label']) for element in item['values']]
+                        s.fields[item["name"]] = MultipleChoiceField(label=item["label"], choices=options)
         return DynamicForm
         
     def get_compiled_code(self):
@@ -67,7 +77,7 @@ class FormInstance(models.Model):
     author = models.ForeignKey(User)
     content = models.TextField()
     created_date = models.DateTimeField()
-    form_generator = models.ForeignKey('FormGenerator')
+    form_generator = models.ForeignKey('FormGenerator', blank=True, null=True)
     
     def get_data(self):
         return json.loads(self.content)
