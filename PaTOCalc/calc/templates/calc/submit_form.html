@@ -8,7 +8,10 @@
 	<link type="text/css" rel="stylesheet" href="{% static 'css/default.css' %}" />
    <script src="{% static 'js/codemirror.js' %}"></script>
    <script src="{% static 'js/python.js' %}"></script>
-   <style type="text/css">.CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}</style>
+   <style type="text/css">
+        .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}
+        .field{display:block;}
+   </style>
 {% endblock %}
 
 {% block main_container %}
@@ -39,6 +42,7 @@
         {% endfor %}
     </fieldset>
     <p>
+        <br>
         <strong> Form Fields </strong><br>
         Build up the inputs and outputs for the calculator
     </p>
@@ -69,13 +73,52 @@
        <input type="submit" value="Add Field" id="add">
        <br><br>
     </div>
+    <strong>Current Fields:</strong>
     <div id="output">
-        
+        None
     </div>
+    <br>
     <script>
     var fields = [];
     function render_field(field, all){
-        $('#output').text(JSON.stringify(all));
+        //$('#output').text(JSON.stringify(all));
+        text = ''
+        $.each(all, function(index, value){
+            if (value.type == "select" || value.type == "multiselect"){
+                out = "<span class='field'><strong>";
+                out = out + value.label;
+                out = out + "</strong> (";
+                out = out + value.name;
+                out = out + ") ";
+                out = out + value.type;
+                out = out + " <a href='javascript:remove_field(" + index + ")'>Delete</a>";
+                out = out + "<ol>"
+                selects = ''
+                $.each(value.values, function(index, opt){
+                    selects = selects + '<li>'
+                    selects = selects + opt.label
+                    selects = selects + ' ('
+                    selects = selects + opt.value
+                    selects = selects + ')</li>'
+                });
+                out = out + selects + "</ol></span>"
+                text = text + out
+            } else {
+                out = "<span class='field'><strong>";
+                out = out + value.label;
+                out = out + "</strong> (";
+                out = out + value.name;
+                out = out + ") ";
+                out = out + value.type;
+                out = out + " <a href='javascript:remove_field(" + index + ")'>Delete</a>";
+                text = text + out
+            }
+        });
+        $('#output').html(text);
+    }
+    function remove_field(index) {
+        fields.splice(index, 1);
+        render_field('', fields);
     }
     function hasWhiteSpace(s){
         return /\s/g.test(s);
@@ -104,6 +147,9 @@
             }
             field.label = $('#field_label').val();
             field.type = $("#new_field input[type='radio']:checked").val();
+            if (field.name == "" || field.label == "" || field.type == null) {
+                return
+            }
             if (field.type == 'select' || field.type == 'multiselect'){
                 values = []
                 $("#select_values input[name='select_name']").each(function(){
@@ -136,7 +182,7 @@
         if (reset_val != ""){
             fields = JSON.parse(reset_val);
         }
-        $('#output').append(JSON.stringify(fields));
+        render_field(null, fields);
         $('.form-actions button').click(function(event){
             $('#id_html').text(JSON.stringify(fields));
         });
