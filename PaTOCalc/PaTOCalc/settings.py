@@ -130,4 +130,3 @@ STATICFILES_DIRS = [
 
 LOGIN_URL = 'login'
 
-PATIENT_SOURCE = 'openeyes'
