@@ -45,7 +45,6 @@ def submit_new_form(request):
 def new_form_instance(request, fg_pk, mrn):
     fg = get_object_or_404(FormGenerator, pk=fg_pk)
     # patient = get_patient ...
-
     form = fg.get_form()(request.POST)
     if request.method == 'POST' and form.is_valid():
         fi = FormInstance(author=request.user,

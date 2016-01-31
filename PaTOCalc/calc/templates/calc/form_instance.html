@@ -10,7 +10,7 @@ $(function() {
     timeoutID = window.setTimeout(function() {
        $.getJSON('{% url 'calc:evaluate' fg_pk mrn %}' + '?' + $('#myForm').serialize(), function (t){
          $.each( t, function( key, val ) {
-    $("#id_" + key).val(val);
+    $(".output#id_" + key).val(val);
   });
        
        })
