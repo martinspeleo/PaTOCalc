@@ -3,7 +3,7 @@ import json
 
 from django.shortcuts import render, render_to_response, redirect
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.views.generic.base import TemplateView
 from django.template import RequestContext
@@ -48,6 +48,21 @@ def new_form_instance(request, fg_pk, mrn):
         return redirect('pdf_viewer', fi.pk)
     ctx = {'user' : request.user, 'form': form}
     return render(request,'calc/form_instance.html', ctx)
+    
+@login_required
+def evaluate(request, fg_pk, mrn):
+    fg = get_object_or_404(FormGenerator, pk = fg_pk)
+    inputs = {}
+    print [x['name'] for x in fg.get_data() if x['type'] == 'num']
+    for key in [x['name'] for x in fg.get_data() if x['type'] == 'num']:
+        try:
+            inputs[key] = float(request.GET[key][0])
+        except:
+            pass
+    print inputs
+    result = fg.evaluate(inputs)
+    return JsonResponse(result)
+    
 
 class CalculatorListView(ListView):
 

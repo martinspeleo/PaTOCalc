@@ -6,7 +6,9 @@ from django.forms.forms import Form
 from django.forms.fields import CharField, FloatField
 
 import json
+from math import log, e
 
+GLOBALS = {'__builtins__': [], 'log': log, 'e': e}
 
 class FormGenerator(models.Model):
     FORM_STATUS = (
@@ -51,6 +53,15 @@ class FormGenerator(models.Model):
                     elif item["type"] == "text":
                         s.fields[item["name"]] = CharField(label=item["label"], max_length=255)
         return DynamicForm
+        
+    def get_compiled_code(self):
+        return compile(self.code , "<string>", "exec")
+
+        
+    def evaluate(self, d):
+        print self.code, GLOBALS, d
+        eval(self.get_compiled_code(), GLOBALS, d)
+        return d
 
 class FormInstance(models.Model):
     author = models.ForeignKey(User)
