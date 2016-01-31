@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 from django.forms.forms import Form
-from django.forms.fields import CharField, FloatField
+from django.forms.fields import CharField, FloatField, ChoiceField, MultipleChoiceField
 
 import json
 
@@ -52,6 +52,14 @@ class FormGenerator(models.Model):
                         s.fields[item["name"]] = FloatField(label=item["label"])
                     elif item["type"] == "text":
                         s.fields[item["name"]] = CharField(label=item["label"], max_length=255)
+                    elif item["type"] == "dsc":
+                        s.fields[item["name"]] = CharField(label=item["label"], max_length=255)
+                    elif item["type"] == "select":
+                        options = [(element['value'], element['label']) for element in item['values']]
+                        s.fields[item["name"]] = ChoiceField(label=item["label"], choices=options)
+                    elif item["type"] == "multiselect":
+                        options = [(element['value'], element['label']) for element in item['values']]
+                        s.fields[item["name"]] = MultipleChoiceField(label=item["label"], choices=options)
         return DynamicForm
 
 class FormInstance(models.Model):
