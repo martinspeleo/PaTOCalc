@@ -48,6 +48,7 @@ def new_form_instance(request, fg_pk, mrn):
 
     cp = get_current_patient(request)
     patient = {
+        'hos_num': cp.getHosnum(),
         'name': str(cp),
         'age': cp.getObservation('age'),
         'sex': cp.getObservation('sex')

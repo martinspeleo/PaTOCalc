@@ -19,7 +19,8 @@ def make_pdf(request, fi_pk):
     form_data = fi.get_data()
     # Create the HttpResponse object with the appropriate PDF headers.
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+    filename = str(fi) + '.pdf'
+    response['Content-Disposition'] = 'attachment; filename="' + filename + '"'
 
     # Create the PDF object, using the response object as its "file."
     p = canvas.Canvas(response, pagesize=letter)
