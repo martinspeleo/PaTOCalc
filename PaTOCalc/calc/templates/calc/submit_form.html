@@ -115,6 +115,9 @@
                 text = text + out
             }
         });
+        if (text == '') {
+            text = 'none';
+        }
         $('#output').html(text);
     }
     function remove_field(index) {
@@ -209,12 +212,12 @@
       });
       
    	$('#checkMyCode').click( function () {
-
+        $('#id_html').text(JSON.stringify(fields));
         var dataJson = {
             fields: $('#output').text(),
             mycode: editor.getValue(),
         };
-
+        
    		$.ajax({
    			url: '{% url "calc:check_my_code" %}',
             type: 'post',
