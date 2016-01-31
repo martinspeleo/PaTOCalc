@@ -60,6 +60,11 @@ def evaluate(request, fg_pk, mrn):
             inputs[key] = float(request.GET[key][0])
         except:
             pass
+    for key in [x['name'] for x in fg.get_data() if x['type'] == 'select']:
+        try:
+            inputs[key] = request.GET[key][0]
+        except:
+            pass
     result = fg.evaluate(inputs)
     return JsonResponse(result)
     
