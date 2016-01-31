@@ -1,7 +1,7 @@
-{% extends "calc/base.html" %}
+{% extends "base.html" %}
 
 
-{% block content %}
+{% block main_container %}
 
 <form action="." method="post">
 {% csrf_token %}
@@ -10,4 +10,4 @@
 </form>
 
 <a href="{% url 'home' %}" >Home page</a>
-{% endblock content %}
+{% endblock main_container %}
