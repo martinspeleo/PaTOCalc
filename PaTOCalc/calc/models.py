@@ -65,6 +65,10 @@ class FormGenerator(models.Model):
                     elif item["type"] == "multiselect":
                         options = [(element['value'], element['label']) for element in item['values']]
                         s.fields[item["name"]] = MultipleChoiceField(label=item["label"], choices=options)
+                    elif item["type"] == "output":
+                        s.fields[item["name"]] = CharField(label=item["label"], max_length=255, required = False)
+                        s.fields[item["name"]].widget.attrs['readonly'] = True
+                        s.fields[item["name"]].widget.attrs['class'] = "output"
         return DynamicForm
         
     def get_compiled_code(self):
