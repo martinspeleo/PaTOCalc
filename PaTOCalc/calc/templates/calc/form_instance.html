@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load bootstrap3 %}
 
 {% block extra_head %}
 <script src="//code.jquery.com/jquery.min.js"></script>
@@ -24,7 +25,7 @@ $(function() {
 Enter data
 <form id="myForm" action="." method="post">
 {% csrf_token %}
-{{ form.as_p }}
+{% bootstrap_form form %}
 <input type="submit" value="OK">
 </form>
 <a href="{% url 'home' %}" >Home page</a>
