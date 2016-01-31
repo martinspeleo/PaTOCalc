@@ -54,17 +54,17 @@ class FormGenerator(models.Model):
                 super(DynamicForm, s).__init__(*args, **kwargs)
                 for item in self.get_data():
                     if item["type"] == "num":
-                        s.fields[item["name"]] = FloatField(label=item["label"])
+                        s.fields[item["name"]] = FloatField(label=item["label"], required = False)
                     elif item["type"] == "text":
-                        s.fields[item["name"]] = CharField(label=item["label"], max_length=255)
+                        s.fields[item["name"]] = CharField(label=item["label"], max_length=255, required = False)
                     elif item["type"] == "desc":
-                        s.fields[item["name"]] = CharField(label=item["label"], widget=LabelWidget)
+                        s.fields[item["name"]] = CharField(label=item["label"], widget=LabelWidget, required = False)
                     elif item["type"] == "select":
                         options = [(element['value'], element['label']) for element in item['values']]
-                        s.fields[item["name"]] = ChoiceField(label=item["label"], choices=options)
+                        s.fields[item["name"]] = ChoiceField(label=item["label"], choices=options, required = False)
                     elif item["type"] == "multiselect":
                         options = [(element['value'], element['label']) for element in item['values']]
-                        s.fields[item["name"]] = MultipleChoiceField(label=item["label"], choices=options)
+                        s.fields[item["name"]] = MultipleChoiceField(label=item["label"], choices=options, required = False)
                     elif item["type"] == "output":
                         s.fields[item["name"]] = CharField(label=item["label"], max_length=255, required = False)
                         s.fields[item["name"]].widget.attrs['readonly'] = True
