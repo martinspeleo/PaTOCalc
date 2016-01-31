@@ -50,20 +50,23 @@ def new_form_instance(request, fg_pk, mrn):
                           form_generator = fg)
         fi.save()
         return redirect('pdf_viewer', fi.pk)
-    ctx = {'user' : request.user, 'form': form}
+    ctx = {'user' : request.user, 'form': form, 'fg_pk': fg_pk, 'mrn': mrn}
     return render(request,'calc/form_instance.html', ctx)
     
 @login_required
 def evaluate(request, fg_pk, mrn):
     fg = get_object_or_404(FormGenerator, pk = fg_pk)
     inputs = {}
-    print [x['name'] for x in fg.get_data() if x['type'] == 'num']
     for key in [x['name'] for x in fg.get_data() if x['type'] == 'num']:
         try:
             inputs[key] = float(request.GET[key][0])
         except:
             pass
-    print inputs
+    for key in [x['name'] for x in fg.get_data() if x['type'] == 'select']:
+        try:
+            inputs[key] = request.GET[key][0]
+        except:
+            pass
     result = fg.evaluate(inputs)
     return JsonResponse(result)
     

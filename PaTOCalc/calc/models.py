@@ -3,6 +3,9 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 from django.forms.forms import Form
+from django.forms import Widget
+from django.utils.html import format_html
+from django.utils.encoding import force_text
 from django.forms.fields import CharField, FloatField, ChoiceField, MultipleChoiceField
 
 import json
@@ -54,8 +57,8 @@ class FormGenerator(models.Model):
                         s.fields[item["name"]] = FloatField(label=item["label"])
                     elif item["type"] == "text":
                         s.fields[item["name"]] = CharField(label=item["label"], max_length=255)
-                    elif item["type"] == "dsc":
-                        s.fields[item["name"]] = CharField(label=item["label"], max_length=255)
+                    elif item["type"] == "desc":
+                        s.fields[item["name"]] = CharField(label=item["label"], widget=LabelWidget)
                     elif item["type"] == "select":
                         options = [(element['value'], element['label']) for element in item['values']]
                         s.fields[item["name"]] = ChoiceField(label=item["label"], choices=options)
@@ -73,6 +76,10 @@ class FormGenerator(models.Model):
         eval(self.get_compiled_code(), GLOBALS, d)
         return d
 
+class LabelWidget(Widget):
+    def render(self, name, value, attrs=None):
+        return ''
+        
 class FormInstance(models.Model):
     author = models.ForeignKey(User)
     content = models.TextField()
