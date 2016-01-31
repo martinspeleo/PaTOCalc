@@ -42,6 +42,9 @@ class FormGenerator(models.Model):
     developer = models.ForeignKey(User, blank=True, null=True, related_name='forms_for_dev')
     tester = models.ForeignKey(User, blank=True, null=True, related_name='forms_for_testing')
 
+    def __str__(self):
+        return self.title
+
     def get_data(self):
         if self.html:
             return json.loads(self.html)
@@ -92,4 +95,11 @@ class FormInstance(models.Model):
     
     def get_data(self):
         return json.loads(self.content)
+
+    def __str__(self):
+        patient = json.loads(self.patient_data)
+        name = str(self.form_generator)
+        if 'hos_num' in patient:
+            name += ' - ' + patient['hos_num']
+        return name
 

@@ -15,6 +15,9 @@ class Patient(object):
     def getId(self):
         return self.hos_num
 
+    def getHosnum(self):
+        return self.hos_num
+
     def setHosnum(self, hos_num):
         self.hos_num = hos_num
 
