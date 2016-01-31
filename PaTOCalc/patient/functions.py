@@ -30,9 +30,14 @@ def get_openeyes_patient(request):
 
 def get_current_patient(request):
     if not hasattr(settings, 'PATIENT_SOURCE'):
-        return request.session.get('current_patient', None)
+        id = request.session.get('current_patient', None)
+        if id:
+            patient = Patient()
+            patient.setHosnum(request.session.get('current_patient', None))
+            return patient
+        return None
     elif settings.PATIENT_SOURCE == 'openeyes':
-        return get_openeyes_patient()
+        return get_openeyes_patient(request)
     else:
         raise Exception('unregonised patient source configuration')
 
@@ -74,7 +79,7 @@ def openeyes_search(search_term):
         if (len(entries) > 1):
             return {'id': 'OE - Multiple results not implemented yet for search ' + str(search_term)}
         elif (len(entries) == 1):
-            patient = OpenEyesPatient(entries[0]['content'])
+            patient = OpenEyesPatient()
             patient.setId(entries[0]['id'])
             return patient
         else:
