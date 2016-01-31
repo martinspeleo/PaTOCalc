@@ -85,6 +85,8 @@ def make_pdf(request, fi_pk):
     for field in ast.literal_eval(fi.form_generator.html) :
         if field['type'] == 'num':
             mycode += '{0} = {1} \n'.format(field['label'], fields[field['name']])
+        if field['type'] == 'select':
+            mycode += '{0} = "{1}" \n'.format(field['label'], fields[field['name']])
 	
     mycode += '\n\n# Your code \n'
     mycode += fi.form_generator.code
