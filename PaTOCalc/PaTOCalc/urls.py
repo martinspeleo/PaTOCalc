@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth.views import login
 from django.views.generic.base import TemplateView
 
 
 urlpatterns = [
+    url(r'^login/', login, name='login'),
     url(r'^admin/', admin.site.urls),
     url(r'^calc/', include('calc.urls', namespace="calc")),
     url(r'^pdfviewer/', include('pdfviewer.urls')),

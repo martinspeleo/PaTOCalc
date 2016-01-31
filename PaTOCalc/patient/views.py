@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 from .forms import PatientSearchForm
 from .functions import set_current_patient, clear_current_patient
@@ -11,6 +13,7 @@ from .functions import set_current_patient, clear_current_patient
 class HomePageView(TemplateView):
     template_name = "index.html"
 
+@method_decorator(login_required, name='dispatch')
 class PatientSearchView(FormView):
     template_name = "search.html"
     form_class = PatientSearchForm
