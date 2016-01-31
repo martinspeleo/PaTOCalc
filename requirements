@@ -1,4 +1,5 @@
 Django >= 1.9
 reportlab
 django-bootstrap3
+requests
 
