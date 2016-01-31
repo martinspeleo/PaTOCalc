@@ -6,6 +6,7 @@ from reportlab.pdfgen import canvas
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
+import json
 from reportlab.rl_config import defaultPageSize
 
 from calc.models import FormInstance
@@ -48,11 +49,12 @@ def make_pdf(request, fi_pk):
     p.restoreState()
 
     # Patient Data
+    patient = json.loads(fi.patient_data)
     p.saveState()
     p.setFont('Helvetica', 10)
-    p.drawString(35, PAGE_HEIGHT - 175, 'Patient Name : {0}'.format('John Smith'))
-    p.drawString(35, PAGE_HEIGHT - 190, 'Patient Age : {0}'.format('60'))
-    p.drawString(35, PAGE_HEIGHT - 205, 'Patient Sex : {0}'.format('Male'))
+    p.drawString(35, PAGE_HEIGHT - 175, 'Patient Name : {0}'.format(patient['name']))
+    p.drawString(35, PAGE_HEIGHT - 190, 'Patient Age : {0}'.format(patient['age']))
+    p.drawString(35, PAGE_HEIGHT - 205, 'Patient Sex : {0}'.format(patient['sex']))
     p.restoreState()
 
     # Form Data
@@ -71,17 +73,18 @@ def make_pdf(request, fi_pk):
     p.setFont('Helvetica', 10)
     y = PAGE_HEIGHT - 330
     for field in ast.literal_eval(fi.form_generator.html) :
-	if field['type'] == 'num':
-	    p.drawString(35, y, '{0}: {1}'.format(field['label'], fields[field['label']]))
-	    y = y - 12
+        if field['type'] == 'num':
+            p.drawString(35, y, '{0}: {1}'.format(field['label'], fields[field['name']]))
+            y = y - 12
     p.restoreState()
 
     # Form Outpus
     mycode = '# This is a code checking example \n'
 
+
     for field in ast.literal_eval(fi.form_generator.html) :
-	if field['type'] == 'num':
-	    mycode += '{0} = {1} \n'.format(field['label'], fields[field['label']])
+        if field['type'] == 'num':
+            mycode += '{0} = {1} \n'.format(field['label'], fields[field['name']])
 	
     mycode += '\n\n# Your code \n'
     mycode += fi.form_generator.code

@@ -48,6 +48,7 @@ def new_form_instance(request, fg_pk, mrn):
 
     cp = get_current_patient(request)
     patient = {
+        'name': str(cp),
         'age': cp.getObservation('age'),
         'sex': cp.getObservation('sex')
     }
@@ -59,7 +60,8 @@ def new_form_instance(request, fg_pk, mrn):
             fi = FormInstance(author=request.user,
                               content=json.dumps(form.cleaned_data),
                               created_date=datetime.datetime.now(),
-                              form_generator=fg)
+                              form_generator=fg,
+                              patient_data=json.dumps(patient))
 
             fi.save()
             return redirect('pdf_viewer', fi.pk)

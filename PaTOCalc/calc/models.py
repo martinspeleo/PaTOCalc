@@ -42,8 +42,6 @@ class FormGenerator(models.Model):
     developer = models.ForeignKey(User, blank=True, null=True, related_name='forms_for_dev')
     tester = models.ForeignKey(User, blank=True, null=True, related_name='forms_for_testing')
 
-    #patient_data = models.TextField(blank=True, null=True)
-
     def get_data(self):
         if self.html:
             return json.loads(self.html)
@@ -90,6 +88,7 @@ class FormInstance(models.Model):
     content = models.TextField()
     created_date = models.DateTimeField()
     form_generator = models.ForeignKey('FormGenerator', blank=True, null=True)
+    patient_data = models.TextField(blank=True, null=True)
     
     def get_data(self):
         return json.loads(self.content)
