@@ -1,15 +1,16 @@
 import json
+from datetime import date, datetime
 
-
-class Patient(json.JSONEncoder):
+class Patient(object):
     hos_num = None
 
-    obs = {
-        'height': 170,
-        'age': 56,
-        'sex': 'm',
-        'weight': 70
-    }
+    def __init__(self):
+        self.obs = {
+            'height': 170,
+            'age': 56,
+            'sex': 'm',
+            'weight': 70
+        }
 
     def getId(self):
         return self.hos_num
@@ -24,7 +25,8 @@ class Patient(json.JSONEncoder):
         except AttributeError:
             pass
 
-        if name in self.obs:
+        if name.lower() in self.obs:
+            print("getting " + name)
             return self.obs[name]
 
         return None
@@ -44,8 +46,9 @@ class Patient(json.JSONEncoder):
 
 class OpenEyesPatient(Patient):
 
-    def default(self, o):
-        return o.__dict__
+    def __init__(self):
+        super(OpenEyesPatient, self).__init__()
+        self.obs = {}
 
     def getId(self):
         return self.id
@@ -59,7 +62,7 @@ class OpenEyesPatient(Patient):
         self.setHosnum(hos_num)
 
         self.parseDefinition(definition)
-        
+
 
     def _getIdentifierFromDefinition(self, definition, label="Hospital Number"):
         for id in definition['identifier']:
@@ -72,6 +75,14 @@ class OpenEyesPatient(Patient):
         self.first_name = definition['name'][0]['given'][0]
         self.title = definition['name'][0]['prefix'][0]
 
+        self.dob = datetime.strptime(definition['birthDate'], '%Y-%m-%d')
+        self.obs['sex'] = definition['gender']['coding'][0]['code'].lower
+
     def __str__(self):
         return self.last_name + ',' + self.first_name + ' (' + self.title + ')'
+
+    def getage(self):
+        today = date.today()
+        return today.year - self.dob.year - ((today.month, today.day) < (self.dob.month, self.dob.day))
+
 

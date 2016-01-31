@@ -72,7 +72,6 @@ class FormGenerator(models.Model):
 
         
     def evaluate(self, d):
-        print self.code, GLOBALS, d
         eval(self.get_compiled_code(), GLOBALS, d)
         return d
 

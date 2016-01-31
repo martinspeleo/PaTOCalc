@@ -17,6 +17,8 @@ from django.views.generic.list import ListView
 from calc.forms import AddFormGenerator
 from calc.models import FormGenerator, FormInstance
 
+from patient.functions import get_current_patient
+
 @staff_member_required
 def admin_home_page(request):
     ctx = {'user' : request.user, 'forms' : FormGenerator.objects.all() }
@@ -50,7 +52,13 @@ def new_form_instance(request, fg_pk, mrn):
                           form_generator = fg)
         fi.save()
         return redirect('pdf_viewer', fi.pk)
-    ctx = {'user' : request.user, 'form': form, 'fg_pk': fg_pk, 'mrn': mrn}
+
+    cp = get_current_patient(request)
+    ctx = {'user' : request.user, 'form': form, 'fg_pk': fg_pk, 'mrn': mrn,
+           'patient': {
+               'age': cp.getObservation('age'),
+               'sex': cp.getObservation('sex')
+           }}
     return render(request,'calc/form_instance.html', ctx)
     
 @login_required
