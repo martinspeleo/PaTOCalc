@@ -45,21 +45,27 @@ def submit_new_form(request):
 def new_form_instance(request, fg_pk, mrn):
     fg = get_object_or_404(FormGenerator, pk=fg_pk)
     # patient = get_patient ...
-    form = fg.get_form()(request.POST)
-    if request.method == 'POST' and form.is_valid():
-        fi = FormInstance(author=request.user,
-                          content=json.dumps(form.cleaned_data),
-                          created_date=datetime.datetime.now(),
-                          form_generator=fg)
-        fi.save()
-        return redirect('pdf_viewer', fi.pk)
 
     cp = get_current_patient(request)
+    patient = {
+        'age': cp.getObservation('age'),
+        'sex': cp.getObservation('sex')
+    }
+
+    form = fg.get_form()(patient)
+    if request.method == 'POST':
+        form = fg.get_form()(request.POST)
+        if form.is_valid():
+            fi = FormInstance(author=request.user,
+                              content=json.dumps(form.cleaned_data),
+                              created_date=datetime.datetime.now(),
+                              form_generator=fg)
+
+            fi.save()
+            return redirect('pdf_viewer', fi.pk)
+
     ctx = {'user': request.user, 'form': form, 'fg_pk': fg_pk, 'mrn': mrn,
-           'patient': {
-               'age': cp.getObservation('age'),
-               'sex': cp.getObservation('sex')
-           }}
+           'patient': patient}
     return render(request, 'calc/form_instance.html', ctx)
 
 

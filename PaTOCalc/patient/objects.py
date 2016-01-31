@@ -26,7 +26,6 @@ class Patient(object):
             pass
 
         if name.lower() in self.obs:
-            print("getting " + name)
             return self.obs[name]
 
         return None
@@ -76,7 +75,7 @@ class OpenEyesPatient(Patient):
         self.title = definition['name'][0]['prefix'][0]
 
         self.dob = datetime.strptime(definition['birthDate'], '%Y-%m-%d')
-        self.obs['sex'] = definition['gender']['coding'][0]['code'].lower
+        self.obs['sex'] = definition['gender']['coding'][0]['code'].lower()
 
     def __str__(self):
         return self.last_name + ',' + self.first_name + ' (' + self.title + ')'
