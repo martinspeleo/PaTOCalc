@@ -7,7 +7,7 @@ register = template.Library()
 @register.simple_tag(takes_context=True)
 def current_patient(context):
     request = context['request']
-    print("here")
+
     if not hasattr(settings, 'PATIENT_SOURCE'):
         return request.session.get('current_patient', None)
     elif settings.PATIENT_SOURCE == 'openeyes':

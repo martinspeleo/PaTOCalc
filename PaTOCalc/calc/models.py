@@ -42,7 +42,8 @@ class FormGenerator(models.Model):
     developer = models.ForeignKey(User, blank=True, null=True, related_name='forms_for_dev')
     tester = models.ForeignKey(User, blank=True, null=True, related_name='forms_for_testing')
 
-    
+    #patient_data = models.TextField(blank=True, null=True)
+
     def get_data(self):
         if self.html:
             return json.loads(self.html)
@@ -69,6 +70,7 @@ class FormGenerator(models.Model):
                         s.fields[item["name"]] = CharField(label=item["label"], max_length=255, required = False)
                         s.fields[item["name"]].widget.attrs['readonly'] = True
                         s.fields[item["name"]].widget.attrs['class'] = "output"
+                    s.fields[item["name"]].initial = 12
         return DynamicForm
         
     def get_compiled_code(self):
