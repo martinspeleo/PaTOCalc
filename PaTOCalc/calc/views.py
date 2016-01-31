@@ -48,7 +48,7 @@ def new_form_instance(request, fg_pk, mrn):
                           form_generator = fg)
         fi.save()
         return redirect('pdf_viewer', fi.pk)
-    ctx = {'user' : request.user, 'form': form}
+    ctx = {'user' : request.user, 'form': form, 'fg_pk': fg_pk, 'mrn': mrn}
     return render(request,'calc/form_instance.html', ctx)
     
 @login_required

@@ -1,10 +1,25 @@
 {% extends "base.html" %}
 
+{% block extra_head %}
+<script src="//code.jquery.com/jquery.min.js"></script>
+<script>
+var timeoutID = '';
+$(function() {
+  $("input").on('input propertychange', function() {
+    window.clearTimeout(timeoutID);
+    timeoutID = window.setTimeout(function() {$.get('{% url 'calc:evaluate' fg_pk mrn %}' + '?' + $('#myForm').serialize())}, 1000);
+  })
+});
+</script>
+{% endblock %}
+
 {% block main_container %}
-<form action="." method="post">
+Enter data
+<form id="myForm" action="." method="post">
 {% csrf_token %}
 {{ form.as_p }}
 <input type="submit" value="OK">
 </form>
 <a href="{% url 'home' %}" >Home page</a>
+
 {% endblock %}
