@@ -1,5 +1,6 @@
 from django.conf import settings
 import requests
+from requests.auth import HTTPBasicAuth
 import base64
 
 
@@ -17,25 +18,27 @@ def search_for_patient(search_term):
         return {'id': search_term}
     elif settings.PATIENT_SOURCE == 'openeyes':
         url = settings.OPENEYES_URL + '/api/Patient?identifier=' + str(search_term)
-        auth = "{" + settings.OPENEYES_USER + ":" + settings.OPENEYES_PASSWORD + "}"
         headers = {
-            'Basic': base64.b64encode(bytes(auth, 'utf-8')),
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
 
-        response = requests.get(url, headers=headers).json()
+        response = requests.get(url,
+                                auth=HTTPBasicAuth(settings.OPENEYES_USER, settings.OPENEYES_PASSWORD),
+                                headers=headers).json()
 
-        if (hasattr(response, 'entry')):
-            entries = response.entry
+        if (response['entry']):
+            entries = response['entry']
             if (len(entries) > 1):
                 return {'id': 'OE - Multiple results not implemented yet for search ' + str(search_term)}
             elif (len(entries) == 1):
-                patient = entries[0].content
+                patient = entries[0]['content']
                 return {
-                    'id': patient.name[0].given + ' ' + patient.name[0].family
+                    'id': patient['name'][0]['given'][0] + ' ' + patient['name'][0]['family'][0]
                 }
             else:
                 return None
+        else:
+            raise Exception('search not available')
     else:
         raise Exception('unregonised patient search configuration')
