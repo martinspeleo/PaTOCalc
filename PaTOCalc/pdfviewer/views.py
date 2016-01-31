@@ -78,8 +78,8 @@ def make_pdf(request, fi_pk):
     mycode = '# This is a code checking example \n'
 
     for field in fields:
-        mycode += '{0} = {1} \n'.format(field, float(fields[field]))
-
+	mycode += '{0} = {1} \n'.format(field, fields[field])
+	
     mycode += '\n\n# Your code \n'
     mycode += fi.form_generator.code
     try:
@@ -91,7 +91,7 @@ def make_pdf(request, fi_pk):
         output = '{0}'.format(redirected_output.getvalue())
     except Exception as e:
         output = 'An error was found: {0}'.format(e)
-
+    
     # Form Output
     p.saveState()
     p.setFont('Helvetica', 10)
