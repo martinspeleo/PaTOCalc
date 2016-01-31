@@ -39,7 +39,9 @@ class FormGenerator(models.Model):
 
     
     def get_data(self):
-        return json.loads(self.html)
+        if self.html:
+            return json.loads(self.html)
+        return []
     
     def get_form(self):    
         class DynamicForm(Form):
@@ -56,7 +58,7 @@ class FormInstance(models.Model):
     author = models.ForeignKey(User)
     content = models.TextField()
     created_date = models.DateTimeField()
-    form_generator = models.ForeignKey('FormGenerator')
+    form_generator = models.ForeignKey('FormGenerator', blank=True, null=True)
     
     def get_data(self):
         return json.loads(self.content)
