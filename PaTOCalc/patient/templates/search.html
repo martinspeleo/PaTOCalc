@@ -9,6 +9,9 @@
 
     <form method="POST">
         {% csrf_token %}
+    {% if error %}
+        <b>patient not found</b>
+    {% endif %}
     {% bootstrap_form form %}
         <input class="btn btn-primary" type="submit" value="Search" />
     </form>

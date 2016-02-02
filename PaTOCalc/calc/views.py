@@ -44,9 +44,9 @@ def submit_new_form(request):
 @login_required
 def new_form_instance(request, fg_pk, mrn):
     fg = get_object_or_404(FormGenerator, pk=fg_pk)
-    # patient = get_patient ...
 
     cp = get_current_patient(request)
+    # TODO: Would be better to pickle the patient
     patient = {
         'hos_num': cp.getHosnum(),
         'name': str(cp),
