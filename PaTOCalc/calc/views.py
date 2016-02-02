@@ -68,7 +68,7 @@ def new_form_instance(request, fg_pk, mrn):
             return redirect('pdf_viewer', fi.pk)
 
     ctx = {'user': request.user, 'form': form, 'fg_pk': fg_pk, 'mrn': mrn,
-           'patient': patient}
+           'patient': patient, 'fg': fg}
     return render(request, 'calc/form_instance.html', ctx)
 
 

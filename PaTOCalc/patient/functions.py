@@ -1,7 +1,7 @@
 from django.conf import settings
 import requests
 from requests.auth import HTTPBasicAuth
-import json
+import jsonpickle
 from .objects import Patient, OpenEyesPatient
 
 
@@ -28,25 +28,22 @@ def get_openeyes_patient(request):
         return patient
     return None
 
+
 def get_current_patient(request):
-    if not hasattr(settings, 'PATIENT_SOURCE'):
-        id = request.session.get('current_patient', None)
-        if id:
-            patient = Patient()
-            patient.setHosnum(request.session.get('current_patient', None))
-            return patient
-        return None
-    elif settings.PATIENT_SOURCE == 'openeyes':
-        return get_openeyes_patient(request)
-    else:
-        raise Exception('unregonised patient source configuration')
+    frozen = request.session.get('current_patient', None)
+    if frozen is not None:
+        return jsonpickle.decode(frozen)
+
+    return None
 
 
 def set_current_patient(request, patient):
-    request.session['current_patient'] = patient.getId()
+    request.session['current_patient'] = jsonpickle.encode(patient)
+
 
 def clear_current_patient(request):
     request.session['current_patient'] = None
+
 
 def search_for_patient(search_term):
     if not hasattr(settings, 'PATIENT_SOURCE'):
@@ -57,6 +54,7 @@ def search_for_patient(search_term):
         return openeyes_search(search_term)
     else:
         raise Exception('unregonised patient search configuration')
+
 
 def openeyes_search(search_term):
     url = settings.OPENEYES_URL + '/api/Patient?identifier=' + str(search_term)
@@ -81,6 +79,7 @@ def openeyes_search(search_term):
         elif (len(entries) == 1):
             patient = OpenEyesPatient()
             patient.setId(entries[0]['id'])
+            patient.setupFromDefinition(entries[0]['content'])
             return patient
         else:
             return None
